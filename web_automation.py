@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import smtplib
+import time
 
 
 def play_youtube_vid():
@@ -16,7 +18,7 @@ def play_youtube_vid():
     visible = EC.visibility_of_element_located
 
     # Navigate to url
-    driver.get(f"https://youtube.com/results?search_query={statement}")
+    driver.get(f"https://youtube.com/results?search_query={youtube_search}")
 
     # Play the video
     wait.until(visible((By.ID, "video-title")))
@@ -33,5 +35,21 @@ def search_google():
     driver.maximize_window()
 
     # Searching the input in google
+    driver.get(f"https://google.com/search?q={google_search}")
+
+    # Ensuring the site stays open
+    while True:
+        pass
+
+def send_email():
+
+
+
+
+
+
+
+
+
 
 
