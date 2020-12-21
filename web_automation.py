@@ -1,14 +1,16 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import smtplib
 import time
-
+import re
+import voice_functions as vf
 
 def play_youtube_vid():
     """Play the youtube video the user searched"""
+    youtube_search = vf.take_command().lower().replace(" ", "+")
+
     # Initiate browser and maximize windows
     driver = webdriver.Chrome()
     driver.maximize_window()
@@ -31,6 +33,8 @@ def play_youtube_vid():
 
 def search_google():
     """Searches google for the inquires"""
+    google_search = vf.take_command().lower().replace(" ", "+") # replace function to fit the format of the query
+
     driver = webdriver.Chrome()
     driver.maximize_window()
 
@@ -40,16 +44,4 @@ def search_google():
     # Ensuring the site stays open
     while True:
         pass
-
-def send_email():
-
-
-
-
-
-
-
-
-
-
 
