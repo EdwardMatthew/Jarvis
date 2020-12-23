@@ -2,10 +2,10 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import smtplib
-import time
-import re
+from selenium.webdriver.chrome.options import Options
 import voice_functions as vf
+import wikipedia
+
 
 def play_youtube_vid():
     """Play the youtube video the user searched"""
@@ -22,14 +22,14 @@ def play_youtube_vid():
     # Navigate to url
     driver.get(f"https://youtube.com/results?search_query={youtube_search}")
 
+    # Detaching the browser from the code
+    chrome_options = Options()
+    chrome_options.add_experimental_option("detach", True)
+
     # Play the video
     wait.until(visible((By.ID, "video-title")))
     videos = driver.find_elements_by_id("video-title")
     videos[0].click()
-
-    # Ensuring the video stays open
-    while True:
-        pass
 
 def search_google():
     """Searches google for the inquires"""
@@ -41,7 +41,12 @@ def search_google():
     # Searching the input in google
     driver.get(f"https://google.com/search?q={google_search}")
 
-    # Ensuring the site stays open
-    while True:
-        pass
+    # Detaching the browser from the code
+    chrome_options = Options()
+    chrome_options.add_experimental_option("detach", True)
 
+def search_wikipedia():
+    """Getting the summary from wikipedia"""
+    wikipedia_search = vf.take_command().lower()
+    results = wikipedia.summary(wikipedia_search, sentences = 3)
+    return results
