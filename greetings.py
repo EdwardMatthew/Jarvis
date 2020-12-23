@@ -1,8 +1,6 @@
-import voice_functions as vf
 import datetime
-import pyttsx3
 import shutil
-
+import voice_functions as vf
 
 def wish_me():
     """Greet user based on time"""
@@ -23,14 +21,15 @@ def ask_for_name():
     columns = shutil.get_terminal_size().columns
 
     try:
+        vf.speak(f"welcome, {user_name}")
         print("#####################".center(columns))
         print(f"Welcome, {user_name.center(columns)}")
-        vf.speak(f"Welcome, {user_name}")
         print("#####################".center(columns))
+
+        vf.speak("how can I help you sir?")
+        return user_name
 
     except Exception as e:
         print("Name not recognized.")
         vf.speak("Name not recognized")
         return None
-
-ask_for_name()
