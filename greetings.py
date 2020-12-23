@@ -1,5 +1,4 @@
 import datetime
-import shutil
 import voice_functions as vf
 
 def wish_me():
@@ -17,19 +16,14 @@ def ask_for_name():
     vf.speak("What should I call you user?")
     user_name = vf.take_command()
 
-    # Get columns
-    columns = shutil.get_terminal_size().columns
-
+    # getting name from user
     try:
-        vf.speak(f"welcome, {user_name}")
-        print("#####################".center(columns))
-        print(f"Welcome, {user_name.center(columns)}")
-        print("#####################".center(columns))
-
+        vf.speak(f"Welcome {user_name}")
+        print(f"Username : {user_name}")
         vf.speak("how can I help you sir?")
         return user_name
 
     except Exception as e:
-        print("Name not recognized.")
-        vf.speak("Name not recognized")
+        print(e)
+        vf.speak("Name not recognized. Shutting down...")
         return None

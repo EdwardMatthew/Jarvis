@@ -6,10 +6,9 @@ engine = pyttsx3.init()
 engine.setProperty("rate", 150)
 engine.setProperty("volume", 1.0)
 
-def set_voice(choice):
-    """Set the voice for the assistant"""
-    voices = engine.getProperty("voices")
-    engine.setProperty("voice", voices[choice].id)
+# Voice engine, change the index to 1 for female voice
+voices = engine.getProperty("voices")
+engine.setProperty("voice", voices[0].id)
 
 def speak(text):
     engine.say(text)
@@ -26,13 +25,13 @@ def take_command():
 
         # error handling
         try:
+            print("Recognizing...")
             command = r.recognize_google(audio, language="en-GB")
             print(f"User said : {command}")
 
         except Exception as e:
             print(e)
             speak("Voice not recognized.")
-            return "None"
+            return None
 
     return command
-
