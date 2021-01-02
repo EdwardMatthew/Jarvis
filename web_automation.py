@@ -7,10 +7,8 @@ import voice_functions as vf
 import wikipedia
 
 
-def play_youtube_vid():
+def play_youtube_vid(youtube_query):
     """Play the youtube video the user searched"""
-    youtube_search = vf.take_command().lower().replace(" ", "+")
-
     # Initiate browser and maximize windows
     driver = webdriver.Chrome()
     driver.maximize_window()
@@ -20,7 +18,7 @@ def play_youtube_vid():
     visible = EC.visibility_of_element_located
 
     # Navigate to url
-    driver.get(f"https://youtube.com/results?search_query={youtube_search}")
+    driver.get(f"https://youtube.com/results?search_query={youtube_query}")
 
     # Detaching the browser from the code
     chrome_options = Options()
@@ -31,15 +29,13 @@ def play_youtube_vid():
     videos = driver.find_elements_by_id("video-title")
     videos[0].click()
 
-def search_google():
+def search_google(google_query):
     """Searches google for the inquires"""
-    google_search = vf.take_command().lower().replace(" ", "+") # replace function to fit the format of the query
-
     driver = webdriver.Chrome()
     driver.maximize_window()
 
     # Searching the input in google
-    driver.get(f"https://google.com/search?q={google_search}")
+    driver.get(f"https://google.com/search?q={google_query}")
 
     # Detaching the browser from the code
     chrome_options = Options()
