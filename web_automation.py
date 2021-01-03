@@ -1,10 +1,23 @@
+from __future__ import print_function
+import mimetypes
+import pickle
+import os.path
+from email.mime.audio import MIMEAudio
+from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
+
+import wikipedia
+import base64
+from email.mime.text import MIMEText
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+from googleapiclient.errors import HttpError
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
-import voice_functions as vf
-import wikipedia
 
 
 def play_youtube_vid(youtube_query):
@@ -46,3 +59,47 @@ def search_wikipedia():
     wikipedia_search = vf.take_command().lower()
     results = wikipedia.summary(wikipedia_search, sentences = 3)
     return results
+
+
+SCOPES = ['https://mail.google.com/']
+
+def authenticate_gmail():
+    """Authenticates the gmail api service"""
+    creds = None
+    # The file token.pickle stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if os.path.exists('token.pickle'):
+        with open('token.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+
+    service = build('gmail', 'v1', credentials=creds)
+
+    return service
+
+def create_message(sender, to, subject, message_text):
+    """Create a message without attachments"""
+    message = MIMEText(message_text)
+    message["to"] = to
+    message["from"] = sender
+    message["subject"] = subject
+    return {"raw" : base64.urlsafe_b64encode(message.as_bytes()).decode()}
+
+def send_message(service, user_id, message):
+    """Send an email"""
+    try:
+        message = service.users().messages().send(userId=user_id, body=message).execute()
+        print("Message Id : %s" %message["id"])
+    except HttpError as error:
+        print("An error occured : %s" %error)
