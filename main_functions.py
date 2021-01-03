@@ -12,6 +12,8 @@ import winshell
 
 def initialize_pickle():
     """Main engine"""
+    # initializes the gmail api at the startup of the voice assistant
+    service = wa.authenticate_gmail()
 
     command = vf.take_command().lower()
 
@@ -94,7 +96,6 @@ def initialize_pickle():
         vf.speak("opening outlook...")
         webbrowser.open("https://outlook.com")
 
-
     elif command == "make a note" or command == "write this down":
         vf.speak("what would you like me to note down?")
         new_note = vf.take_command().lower()
@@ -112,6 +113,26 @@ def initialize_pickle():
         vf.speak("recycle bin emptied!")
         print("the recycle bin is emptied!")
 
+    elif command == "send an email":
+        try:
+            vf.speak("Okay, who would you like to send the email to?")
+
+            # getting the email address of the recipient
+            to_address = str(input("Please enter the email address of the recipient here"))
+
+            # getting the message and the subject
+            vf.speak("what should write?")
+            content = vf.take_command()
+            vf.speak("what should the subject be?")
+            subject = vf.take_command()
+
+            # Creating and sending the message
+            msg = wa.create_message("me", to_address, subject, content)
+            wa.send_message(service, "me", msg)
+            vf.speak("I sent the email!")
+        except Exception as e:
+            print(e)
+            vf.speak("I can't send this email, something's up.")
 
 WAKE = "hey pickle"
 
